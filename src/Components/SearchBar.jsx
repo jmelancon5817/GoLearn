@@ -1,9 +1,16 @@
-const SearchBar = () => {
+import React, { useState } from "react";
+
+const SearchBar = (props) => {
   return (
     <div class="relative flex flex-col justify-center overflow-hidden  ">
       <div class="mx-auto max-w-md">
-        <form action="" class="relative mx-auto w-max">
+        <form
+          onSubmit={props.searchBook}
+          action=""
+          class="relative mx-auto w-max"
+        >
           <input
+            onChange={props.handleSearch}
             type="search"
             class="peer cursor-pointer relative z-10 h-12 w-12 rounded-full border bg-transparent pl-12 outline-none focus:w-full focus:cursor-text border-cyan-500 focus:pl-16 focus:pr-4"
           />
