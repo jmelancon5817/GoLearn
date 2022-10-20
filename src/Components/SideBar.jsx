@@ -1,36 +1,61 @@
+import React, { useState } from "react";
+import axios from "axios";
+import BookList from "./BookList";
+import Main from "./Main";
+
 const SideBar = () => {
+  const [book, setBook] = useState("");
+  const [result, setResult] = useState([]);
+  const [apiKey, setApiKey] = useState(
+    "AIzaSyBQLZRNwY7VOtx5yc9LmMzhLRhVd6M3cJg"
+  );
+
+  function handleChange(event) {
+    const book = event.target.value;
+    setBook(book);
+  }
+
+  function handleSubmit(e) {
+    console.log(e.target.attributes.link.nodeValue);
+    const subject = e.target.attributes.link.nodeValue;
+    axios.get(`${subject}`).then((data) => {
+      console.log(data.data.items);
+      setResult(data.data.items);
+    });
+  }
+
   const sidebarData = [
     {
-      title: "Genre",
-      link: "/api",
+      title: "Science",
+      link: "https://www.googleapis.com/books/v1/volumes?q=subject:science&key=AIzaSyBQLZRNwY7VOtx5yc9LmMzhLRhVd6M3cJg&maxResults=40",
     },
     {
-      title: "Genre",
-      link: "/api",
+      title: "History",
+      link: "https://www.googleapis.com/books/v1/volumes?q=subject:history&key=AIzaSyBQLZRNwY7VOtx5yc9LmMzhLRhVd6M3cJg&maxResults=40",
     },
     {
-      title: "Genre",
-      link: "/api",
+      title: "Fiction",
+      link: "https://www.googleapis.com/books/v1/volumes?q=subject:fiction&key=AIzaSyBQLZRNwY7VOtx5yc9LmMzhLRhVd6M3cJg&maxResults=40",
     },
     {
-      title: "Genre",
-      link: "/api",
+      title: "Non-Fiction",
+      link: "https://www.googleapis.com/books/v1/volumes?q=subject:nonfiction&key=AIzaSyBQLZRNwY7VOtx5yc9LmMzhLRhVd6M3cJg&maxResults=40",
     },
     {
-      title: "Genre",
-      link: "/api",
+      title: "Poetry",
+      link: "https://www.googleapis.com/books/v1/volumes?q=subject:poetry&key=AIzaSyBQLZRNwY7VOtx5yc9LmMzhLRhVd6M3cJg&maxResults=40",
     },
     {
-      title: "Genre",
-      link: "/api",
+      title: "Education",
+      link: "https://www.googleapis.com/books/v1/volumes?q=subject:education&key=AIzaSyBQLZRNwY7VOtx5yc9LmMzhLRhVd6M3cJg&maxResults=40",
     },
     {
-      title: "Genre",
-      link: "/api",
+      title: "Religion",
+      link: "https://www.googleapis.com/books/v1/volumes?q=subject:religion&key=AIzaSyBQLZRNwY7VOtx5yc9LmMzhLRhVd6M3cJg&maxResults=40",
     },
     {
-      title: "Genre",
-      link: "/api",
+      title: "Computers",
+      link: "https://www.googleapis.com/books/v1/volumes?q=subject:computers&key=AIzaSyBQLZRNwY7VOtx5yc9LmMzhLRhVd6M3cJg&maxResults=40",
     },
   ];
 
@@ -45,12 +70,35 @@ const SideBar = () => {
           {sidebarData.map((val, key) => {
             return (
               <li key={key} className="hover:text-gray-400">
-                {val.title}
+                <a
+                  onClick={handleSubmit}
+                  onChange={handleChange}
+                  link={val.link}
+                >
+                  {val.title}
+                </a>
               </li>
             );
           })}
         </ul>
       </h3>
+
+      <div className="flex flex-wrap">
+        {result.map((book, i) => {
+          return (
+            <BookList
+              key={i}
+              image={
+                book.volumeInfo.imageLinks
+                  ? book.volumeInfo.imageLinks.thumbnail
+                  : undefined
+              }
+              title={book.volumeInfo.title}
+              author={book.volumeInfo.authors}
+            />
+          );
+        })}
+      </div>
     </div>
   );
 };
